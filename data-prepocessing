@@ -1,0 +1,13 @@
+def resample(img_obj):###把路径输进去
+    spacing = np.round(img_obj.GetSpacing(),decimals=4)
+    origin = img_obj.GetOrigin()
+    direction = img_obj.GetDirection()
+    input_size = img_obj.GetSize()##输入的size应该都是一样的
+    output_spacing = [1, 1, 1]
+    output_size = [int(np.round((input_size[i] * spacing[i])) / output_spacing[i]) for i in range(3)]
+    transform = sitk.Transform(3, sitk.sitkIdentity) #what's mean?
+    ##如果是ROI  AP sitk.sitkNearestNeighbor
+    interp = sitk.sitkLinear  #是Im是线性插值，是label是最近邻插值
+    resampled_img = sitk.Resample(img_obj, output_size, transform,
+        interp, origin, output_spacing, direction)
+    return resampled_img
